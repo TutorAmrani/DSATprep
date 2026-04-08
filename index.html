@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutor Amrani — DSAT R&W Course</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface2: #f1efe9;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #6b6a65;
+    --text3: #9c9a94;
+    --brand: #085041; /* Tutor Amrani Signature Teal */
+    --radius-md: 8px;
+    --radius-lg: 14px;
+    --teal-bg: #E1F5EE; --teal-text: #085041; --teal-border: #0F6E56;
+    --purple-bg: #EEEDFE; --purple-text: #3C3489; --purple-border: #534AB7;
+    --amber-bg: #FAEEDA; --amber-text: #633806; --amber-border: #BA7517;
+    --coral-bg: #FAECE7; --coral-text: #712B13; --coral-border: #993C1D;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #242422;
+      --surface2: #2e2e2b;
+      --border: rgba(255,255,255,0.09);
+      --border2: rgba(255,255,255,0.16);
+      --text: #e8e6df;
+      --text2: #9c9a94;
+      --text3: #6b6a65;
+      --teal-bg: #04342C; --teal-text: #9FE1CB; --teal-border: #0F6E56;
+      --purple-bg: #26215C; --purple-text: #CECBF6; --purple-border: #534AB7;
+      --amber-bg: #412402; --amber-text: #FAC775; --amber-border: #BA7517;
+      --coral-bg: #4A1B0C; --coral-text: #F5C4B3; --coral-border: #993C1D;
+    }
+  }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+
+  .container { max-width: 720px; margin: 0 auto; }
+
+  header { margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+  .brand-name {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--brand);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .eyebrow {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: normal;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .subtitle { font-size: 15px; color: var(--text2); font-style: italic; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 24px 0 32px;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-val { font-size: 22px; color: var(--text); line-height: 1; margin-bottom: 4px; }
+  .stat-lbl { font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); }
+
+  .phase-label {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin: 28px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .phase-label::after { content: ''; flex: 1; height: 0.5px; background: var(--border2); }
+
+  .session-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .session-card:hover { border-color: var(--border2); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .session-card.open { border-color: var(--border2); }
+
+  .session-header { display: flex; align-items: center; gap: 12px; }
+  .hour-dot {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; font-weight: bold; flex-shrink: 0;
+  }
+  .dot-teal { background: var(--teal-bg); color: var(--teal-text); border: 1px solid var(--teal-border); }
+  .dot-purple { background: var(--purple-bg); color: var(--purple-text); border: 1px solid var(--purple-border); }
+  .dot-amber { background: var(--amber-bg); color: var(--amber-text); border: 1px solid var(--amber-border); }
+  .dot-coral { background: var(--coral-bg); color: var(--coral-text); border: 1px solid var(--coral-border); }
+
+  .session-main { flex: 1; min-width: 0; }
+  .session-title { font-size: 15px; color: var(--text); line-height: 1.3; }
+  .session-sub { font-size: 12px; color: var(--text3); font-style: italic; margin-top: 2px; }
+
+  .badge {
+    font-family: 'Courier New', monospace;
+    font-size: 10px; letter-spacing: 0.06em;
+    padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  .badge-teal { background: var(--teal-bg); color: var(--teal-text); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple-text); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-coral { background: var(--coral-bg); color: var(--coral-text); }
+
+  .chevron { font-size: 12px; color: var(--text3); transition: transform 0.2s; flex-shrink: 0; }
+  .session-card.open .chevron { transform: rotate(180deg); }
+
+  .detail-panel {
+    display: none;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 0.5px solid var(--border);
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.75;
+  }
+  .detail-panel.open { display: block; }
+  .detail-panel strong { color: var(--text); font-style: normal; }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tag {
+    font-family: 'Courier New', monospace;
+    font-size: 10px; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 10px;
+    border: 0.5px solid var(--border2);
+    color: var(--text3);
+    text-transform: uppercase;
+  }
+
+  .insight-box {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border-left: 2px solid var(--border2);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-size: 12px;
+    color: var(--text2);
+    font-style: italic;
+  }
+  .insight-box span { font-style: normal; font-weight: bold; color: var(--text); }
+
+  .schedule-note {
+    margin-top: 28px;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+  .schedule-note strong { color: var(--text); }
+
+  footer {
+    margin-top: 40px;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    line-height: 2;
+  }
+  .footer-brand { color: var(--text); font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="brand-name">Tutor Amrani</div>
+    <div class="eyebrow">Premium Tutoring · Reading &amp; Writing</div>
+    <h1>10-Hour Course to 770+</h1>
+    <div class="subtitle">A surgical, sequenced curriculum for top-score seekers</div>
+  </header>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-val">10 hrs</div><div class="stat-lbl">Total course</div></div>
+    <div class="stat-box"><div class="stat-val">770+</div><div class="stat-lbl">Score target</div></div>
+    <div class="stat-box"><div class="stat-val">6 wks</div><div class="stat-lbl">Ideal timeline</div></div>
+    <div class="stat-box"><div class="stat-val">8 types</div><div class="stat-lbl">Q categories</div></div>
+  </div>
+
+  <div class="phase-label">Phase 1 — Foundation · Hours 1–3</div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-teal">1</div>
+      <div class="session-main">
+        <div class="session-title">Diagnostic + DSAT Architecture</div>
+        <div class="session-sub">Full-length module · Score map · Error taxonomy</div>
+      </div>
+      <span class="badge badge-teal">Foundation</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Take a 27-question official DSAT R&W module under timed conditions (32 min). Together we build your personal error map — breaking mistakes into the 4 DSAT domains.<br><br>
+      <strong>Key deliverable:</strong> A ranked list of your top 3 weakest question types. Every subsequent session is sequenced to attack these first.<br><br>
+      <strong>Why it matters at 770+:</strong> At this level, single-digit errors separate 750 from 800. We need surgical precision — not general prep.
+      <div class="insight-box"><span>770+ insight:</span> You're not weak at "reading." You're weak at specific question types. The diagnostic tells us exactly which ones.</div>
+      <div class="tag-row"><span class="tag">Official practice</span><span class="tag">Error log</span><span class="tag">Score projection</span></div>
+    </div>
+  </div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-teal">2</div>
+      <div class="session-main">
+        <div class="session-title">Standard English Conventions — Deep Dive</div>
+        <div class="session-sub">Punctuation · Boundaries · Agreement · Modifier placement</div>
+      </div>
+      <span class="badge badge-teal">Foundation</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Master the 6 grammar rules the DSAT tests obsessively: (1) comma splices, (2) semicolons/colons, (3) subject–verb agreement, (4) pronouns, (5) modifiers, (6) parallelism.<br><br>
+      <strong>Training method:</strong> 3-minute concept brief → 10 targeted practice items → error review. Mixed set timed to 18 min.
+      <div class="insight-box"><span>770+ insight:</span> SEC questions have exactly one correct answer determined by rule — zero subjectivity. These are giveaway points if you know the system.</div>
+      <div class="tag-row"><span class="tag">Punctuation</span><span class="tag">Agreement</span><span class="tag">Parallelism</span><span class="tag">Modifiers</span></div>
+    </div>
+  </div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-teal">3</div>
+      <div class="session-main">
+        <div class="session-title">Transitions &amp; Rhetorical Synthesis</div>
+        <div class="session-sub">Logical connectors · Notes-based synthesis · Claim support</div>
+      </div>
+      <span class="badge badge-teal">Foundation</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Crack the two most-missed Craft & Structure types. Transitions: learn the 5 logical relationships. Rhetorical Synthesis: master the 4-step method for combining bullet points into a claim.
+      <div class="insight-box"><span>770+ insight:</span> Synthesis questions follow a rigid template — the correct answer always includes the most specific detail from the notes AND a clear logical claim.</div>
+      <div class="tag-row"><span class="tag">Transitions</span><span class="tag">Synthesis</span><span class="tag">Logic mapping</span></div>
+    </div>
+  </div>
+
+  <div class="phase-label">Phase 2 — High-Value Skills · Hours 4–6</div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-purple">4</div>
+      <div class="session-main">
+        <div class="session-title">Words in Context + Vocabulary Strategy</div>
+        <div class="session-sub">Precision vocabulary · Connotation traps · Academic register</div>
+      </div>
+      <span class="badge badge-purple">High-Value</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Identify exact register and connotation. Work through 3 traps: (1) weak/strong synonyms, (2) wrong context, (3) academic imposters.
+      <div class="insight-box"><span>770+ insight:</span> At the top score range, the wrong answers are near-synonyms. The winning skill is connotation precision, not vocab breadth.</div>
+      <div class="tag-row"><span class="tag">Connotation</span><span class="tag">Register</span><span class="tag">Predict-first method</span></div>
+    </div>
+  </div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-purple">5</div>
+      <div class="session-main">
+        <div class="session-title">Information &amp; Ideas — Evidence &amp; Data</div>
+        <div class="session-sub">Command of evidence · Charts &amp; tables · Central idea</div>
+      </div>
+      <span class="badge badge-purple">High-Value</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Master Command of Evidence (Textual & Quantitative) and Central Ideas. Practice "claim anchoring" before reading.
+      <div class="insight-box"><span>770+ insight:</span> The DSAT never asks you to interpret data — only to identify which data point supports a specific claim. It's a matching problem.</div>
+      <div class="tag-row"><span class="tag">Textual evidence</span><span class="tag">Graphs &amp; tables</span><span class="tag">Central idea</span></div>
+    </div>
+  </div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-purple">6</div>
+      <div class="session-main">
+        <div class="session-title">Expression of Ideas — Editing for Effect</div>
+        <div class="session-sub">Relevance · Sentence revision · Adding &amp; deleting information</div>
+      </div>
+      <span class="badge badge-purple">High-Value</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Master "writerly" domains: (1) Add/Delete questions, (2) Organization, (3) Rhetorical purpose.
+      <div class="insight-box"><span>770+ insight:</span> "Effective" means serving the stated purpose, not sounding good. Students lose points chasing eloquence instead of relevance.</div>
+      <div class="tag-row"><span class="tag">Add/Delete</span><span class="tag">Organization</span><span class="tag">Purpose</span></div>
+    </div>
+  </div>
+
+  <div class="phase-label">Phase 3 — 770+ Refinement · Hours 7–10</div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-amber">7</div>
+      <div class="session-main">
+        <div class="session-title">Literary &amp; Paired Passages</div>
+        <div class="session-sub">Fiction inference · Figurative language · Purpose questions</div>
+      </div>
+      <span class="badge badge-amber">Refinement</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> focus on: (1) Inference in fiction, (2) Figurative language, (3) Paired texts. Practice "author's choice" framing.
+      <div class="insight-box"><span>770+ insight:</span> Literary questions test your ability to think like a reader evaluating craft, not a student summarizing plot.</div>
+      <div class="tag-row"><span class="tag">Inference</span><span class="tag">Figurative language</span><span class="tag">Paired texts</span></div>
+    </div>
+  </div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-amber">8</div>
+      <div class="session-main">
+        <div class="session-title">Timed Full Module + Deep Review</div>
+        <div class="session-sub">27 questions · 32 min · Performance analysis</div>
+      </div>
+      <span class="badge badge-amber">Refinement</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Simulate a complete module. Deep review of every wrong and "unsure" answer. Categorize errors as concept, misread, or time pressure.
+      <div class="insight-box"><span>770+ insight:</span> At 770+ you can only afford 2–3 errors per module. Every remaining miss must be intentional, not accidental.</div>
+      <div class="tag-row"><span class="tag">Mock module</span><span class="tag">Error autopsy</span><span class="tag">Pattern sheet</span></div>
+    </div>
+  </div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-amber">9</div>
+      <div class="session-main">
+        <div class="session-title">Advanced Elimination &amp; Trap Answer Training</div>
+        <div class="session-sub">Distractor anatomy · "Almost right" answers · Test-maker psychology</div>
+      </div>
+      <span class="badge badge-amber">Refinement</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Study how College Board constructs wrong answers. Master the 5 distractor types: Extreme, Irrelevant, Scope, Opposite, Unsupported.
+      <div class="insight-box"><span>770+ insight:</span> Once you see the patterns, the wrong answers become obvious — even in unfamiliar passages.</div>
+      <div class="tag-row"><span class="tag">Distractor anatomy</span><span class="tag">Elimination</span><span class="tag">Test-maker patterns</span></div>
+    </div>
+  </div>
+
+  <div class="session-card" onclick="toggle(this)">
+    <div class="session-header">
+      <div class="hour-dot dot-coral">10</div>
+      <div class="session-main">
+        <div class="session-title">Final Simulation + Test-Day Protocol</div>
+        <div class="session-sub">Full module · Pacing strategy · Mental game</div>
+      </div>
+      <span class="badge badge-coral">Final</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="detail-panel">
+      <strong>What you'll do:</strong> Build your personal test-day protocol: question order, time checkpoints, and flagging strategy.
+      <div class="insight-box"><span>770+ insight:</span> Hard questions at the end are worth the same point as easy ones at the start. Never let perceived difficulty change your process.</div>
+      <div class="tag-row"><span class="tag">Final simulation</span><span class="tag">Pacing</span><span class="tag">Test-day protocol</span></div>
+    </div>
+  </div>
+
+  <div class="schedule-note">
+    <strong>Tutor Amrani Method:</strong> 2× per week, ~100 min per session. Build in 30 min of independent practice between sessions. Track every error in a running log.
+  </div>
+
+  <footer>
+    <span class="footer-brand">TUTOR AMRANI</span><br>
+    DSAT R&W · 10-Hour Elite Course · $200/hr · Target: 770+
+  </footer>
+
+</div>
+
+<script>
+function toggle(card) {
+  card.classList.toggle('open');
+  const panel = card.querySelector('.detail-panel');
+  panel.classList.toggle('open');
+}
+</script>
+</body>
+</html>
